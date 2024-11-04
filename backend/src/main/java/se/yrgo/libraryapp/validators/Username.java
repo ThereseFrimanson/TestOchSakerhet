@@ -22,7 +22,7 @@ public final class Username {
      * If username is null return false.-------------MAYBE CHANGE TO THROW AN EXCEPTION INSTEAD!!
      * 
      * @param name the name to check
-     * @return true if valid, false if not
+     * @return true if valid, false if not (or null)
      * 
      */
     public static boolean validate(String name) {
