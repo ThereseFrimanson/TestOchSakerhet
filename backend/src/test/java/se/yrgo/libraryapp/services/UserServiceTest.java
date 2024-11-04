@@ -1,5 +1,6 @@
 package se.yrgo.libraryapp.services;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -8,18 +9,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.pac4j.core.credentials.password.PasswordEncoder;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import se.yrgo.libraryapp.dao.UserDao;
 import se.yrgo.libraryapp.entities.LoginInfo;
 import se.yrgo.libraryapp.entities.UserId;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @MockitoSettings(strictness = Strictness.STRICT_STUBS)
 public class UserServiceTest {
     @Mock
     private UserDao userDao;
-    private PasswordEncoder encoder;
 
     @Test
     @SuppressWarnings("deprecation")
@@ -34,6 +32,7 @@ public class UserServiceTest {
         org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
         when(userDao.getLoginInfo(username)).thenReturn(Optional.of(info));
         UserService userService = new UserService(userDao, encoder);
+        
         assertThat(userService.validate(username,
                 password)).isEqualTo(Optional.of(id));
     }
