@@ -3,6 +3,7 @@ package se.yrgo.libraryapp.validators;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -76,5 +77,10 @@ public class UsernameTest {
             assertThat(Username.validate(username)).isFalse();
         }
 
+    @ParameterizedTest
+    @EmptySource
+        void emptyUsername (String username) {
+            assertThat(Username.validate(username)).isFalse();
+        }
 
 }
