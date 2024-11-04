@@ -29,16 +29,19 @@ public class UserDaoTest {
         final String userId = "1";
         final UserId id = UserId.of(userId);
         final String passwordHash = "$argon2i$v=19$m=16,t=2,p=1$QldXU09Sc2dzOWdUalBKQw$LgKb6x4usOpDLTlXCBVhxA";
+
         when(ds.getConnection()).thenReturn(conn);
         when(conn.createStatement()).thenReturn(stmt);
         when(stmt.executeQuery(anyString())).thenReturn(rs);
         when(rs.next()).thenReturn(true, false);
         when(rs.getInt("id")).thenReturn(id.getId());
         when(rs.getString("password_hash")).thenReturn(passwordHash);
+
         UserDao userDao = new UserDao(ds);
         LoginInfo info = userDao.getLoginInfo("1").get();
         assertThat(info.getUserId()).isEqualTo(id);
         assertThat(info.getPasswordHash()).isEqualTo(passwordHash);
+
     }
 
     @Test
@@ -50,23 +53,30 @@ public class UserDaoTest {
         when(rs.next()).thenReturn(false);
         UserDao userDao = new UserDao(ds);
         assertThat(userDao.get(userId)).isEmpty();
+
     }
 
     @Test
     void getExistingUser() throws SQLException {
         final String userId = "1";
         final UserId id = UserId.of(userId);
+
         final String username = "testuser";
         final String realname = "bosse";
+
         final User expectedUser = new User(id, username, realname);
+
         when(ds.getConnection()).thenReturn(conn);
         when(conn.createStatement()).thenReturn(stmt);
         when(stmt.executeQuery(anyString())).thenReturn(rs);
         when(rs.next()).thenReturn(true, false);
         when(rs.getString("user")).thenReturn(username);
         when(rs.getString("realname")).thenReturn(realname);
+
         UserDao userDao = new UserDao(ds);
+
         assertThat(userDao.get(userId)).isEqualTo(Optional.of(expectedUser));
+
     }
 
     @Test
@@ -75,8 +85,12 @@ public class UserDaoTest {
         when(ds.getConnection()).thenReturn(conn);
         when(conn.createStatement()).thenReturn(stmt);
         when(stmt.executeQuery(anyString())).thenReturn(rs);
+
         when(rs.next()).thenReturn(false);
+
         UserDao userDao = new UserDao(ds);
+
         assertThat(userDao.get(username)).isEmpty();
+        
     }
 }

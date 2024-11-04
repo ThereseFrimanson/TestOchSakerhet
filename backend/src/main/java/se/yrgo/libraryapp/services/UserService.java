@@ -13,8 +13,21 @@ public class UserService {
 
     @Inject
     UserService(UserDao userDao, PasswordEncoder encoder) {
-    this.userDao = userDao;
-    this.encoder = encoder;
+        this.userDao = userDao;
+        this.encoder = encoder;
+    }
+
+    private String hashPassword(String password) {
+        return encoder.encode(password);
+    }
+
+    public boolean register(String name, String realName, String password) {
+        if(!userDao.isNameAvailable(name)){
+            return false;
+        }
+        String passwordHash = encoder.encode(password);
+        return userDao.register(name, realName, passwordHash);
+
     }
 
     public Optional<UserId> validate(String username, String password) {
@@ -25,11 +38,10 @@ public class UserService {
 
         LoginInfo loginInfo = maybeLoginInfo.get();
 
-
         if (!encoder.matches(password, loginInfo.getPasswordHash())) {
             return Optional.empty();
         }
 
         return Optional.of(loginInfo.getUserId());
-    }        
+    }
 }
