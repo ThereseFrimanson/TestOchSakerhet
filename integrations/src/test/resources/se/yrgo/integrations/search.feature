@@ -12,3 +12,9 @@ Feature: Searching for books
     And clicks on search.
     Then they can see the book they searched for.
 
+  Scenario: Finding a book by isbn in the isbn field
+    Given the user starts on the search page.
+    When the user writes an isbn in the isbn field
+    And clicks on search button.
+    Then they can see the book with correct isbn.
+
