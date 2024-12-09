@@ -80,14 +80,16 @@ public class BookDao {
     }
 
     public List<BookLoan> overdueLoans() {
-        String query = "SELECT bl.book_id, be.isbn, title, author, return_date, u.id AS user_id "
-                + "FROM book_loan AS bl JOIN book AS b ON bl.book_id = b.book_id "
-                + "JOIN book_edition AS be ON b.isbn = be.isbn "
-                + "JOIN user AS u ON bl.borrower_id = u.id WHERE return_date < CURDATE() "
-                + "ORDER BY return_date ASC";
+        String query = """
+                SELECT bl.book_id, be.isbn, title, author, return_date, u.id AS user_id 
+                FROM book_loan AS bl JOIN book AS b ON bl.book_id = b.book_id 
+                JOIN book_edition AS be ON b.isbn = be.isbn 
+                JOIN user AS u ON bl.borrower_id = u.id WHERE return_date < CURDATE() 
+                ORDER BY return_date ASC;
+                """;
 
         try (Connection conn = ds.getConnection();
-                Statement stmt = conn.createStatement();
+                PreparedStatement stmt = conn.prepareStatement(query);
                 ResultSet rs = stmt.executeQuery(query)) {
             return getOverdueFromSet(rs);
         } catch (SQLException ex) {
